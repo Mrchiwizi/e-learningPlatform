@@ -78,4 +78,58 @@
         </div>
     {% endwith %}
 {% endblock %}
-                
+
+
+{% block include_js %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.13.3/html5sortable.min.js"></script>
+{% endblock include_js %}
+
+
+{% block domready %}
+    var options = {
+        method: 'POST',
+        mode: 'same-origin'
+    }
+
+    const moduleOrderUrl = '{% url "module_order" %}';
+
+    sortable('#modules', {
+        forcePlaceholderSize: true,
+        placholderClass: 'placeholder'
+    })[0].addEventListener('sortupdate', function(e) {
+
+        modulesOrder = {};
+        var modules = document.querySelectorAll('#modules li');
+        modules.forEach(function (module, index) {
+            {% comment %} update module index {% endcomment %}
+            modulesOrder[module.dataset.id] = index;
+            {% comment %} update index in HTML element {% endcomment %}
+            module.querySelector('.order').innerHTML = index + 1;
+            {% comment %} add new order to the HTTP request options {% endcomment %}
+            options['body'] = JSON.stringify(modulesOrder);
+
+            {% comment %} send    HTTP request {% endcomment %}
+            fetch(moduleOrderUrl, options)
+        })
+    });
+
+    const contentOrderUrl = '{% url "content_order" %}';
+
+    sortable('#module-contents', {
+        forcePlaceholderSize: true,
+        placeholderClass: 'placeholder'
+    })[0].addEventListener('sortupdate', function(e) {
+
+        contentOrder = {};
+        var contents = document.querySelectorAll('#module-contents div');
+        contents.forEach(function (content, index) {
+            // update content index
+            contentOrder[content.dataset.id] = index;
+            // add new order to the HTTP request options
+            options['body'] = JSON.stringify(contentOrder);
+
+            // send HTTP request
+            fetch(contentOrderUrl, options)
+        });
+    });
+{% endblock domready %}
