@@ -21,6 +21,7 @@ class Subject(models.Model):
 
 
 class Course(models.Model):
+    students = models.ManyToManyField(User, related_name='courses_joined', blank=True)
     owner = models.ForeignKey(User, related_name='course_created', on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='courses')
     title = models.CharField(max_length=200)
