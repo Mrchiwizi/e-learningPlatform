@@ -40,12 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'students.apps.StudentsConfig',
+    'chat',
 
     # THIRD PARTY
     'embed_video',
     'debug_toolbar',
     'redisboard',
     'rest_framework',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -186,3 +188,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
+
+
+ASGI_APPLICATION = 'educa.asgi.application'
+# ASGI_APPLICATION = 'educa.routing.application'
